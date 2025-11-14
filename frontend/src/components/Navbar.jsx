@@ -28,6 +28,8 @@ export const Navbar = () => {
 
       const userData = await res.json();
 
+      console.log(userData);
+
       setUser(userData);
 
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -71,7 +73,7 @@ export const Navbar = () => {
 
   // TODO: Manejar errores apropiadamente
 
-  const userName = user.name; // TODO: Reemplazar con el nombre real del usuario obtenido de /api/profile
+  const userName = user?.user.name; // TODO: Reemplazar con el nombre real del usuario obtenido de /api/profile
 
   if (isLoading) {
     return <Loading />;
