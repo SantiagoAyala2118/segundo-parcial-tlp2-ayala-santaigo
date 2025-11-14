@@ -28,8 +28,6 @@ export const Navbar = () => {
 
       const userData = await res.json();
 
-      console.log(userData);
-
       setUser(userData);
 
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -55,6 +53,7 @@ export const Navbar = () => {
 
     try {
       const res = await fetch("http://localhost:3000/api/logout", {
+        method: "POST",
         credentials: "include",
       });
 
