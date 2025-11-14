@@ -42,6 +42,8 @@ export const RegisterPage = () => {
         return;
       }
 
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
       setIsLoading(false);
 
       navigate("/login");
