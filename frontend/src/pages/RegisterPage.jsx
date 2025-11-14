@@ -1,9 +1,60 @@
 import { Link } from "react-router";
+import { useForm } from "../hooks/useForm";
+import { useState } from "react";
+import { Loading } from "../components/Loading";
+import { useNavigate } from "react-router";
 
 export const RegisterPage = () => {
   // TODO: Integrar lógica de registro aquí
   // TODO: Implementar useForm para el manejo del formulario
   // TODO: Implementar función handleSubmit
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { formState, handleChange, handleReset } = useForm({
+    name: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  //* FUNCIÓN HANDLESUBMIR
+  const handleSubmit = async (event) => {
+    setIsLoading(true);
+
+    handleReset();
+    event.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:3000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formState),
+      });
+
+      if (!res.ok) {
+        console.log("Error durante el regsitro", res.status, res.statusText);
+        return;
+      }
+
+      setIsLoading(false);
+
+      navigate("/login");
+    } catch (error) {
+      console.log("Error registrandose", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
@@ -19,7 +70,11 @@ export const RegisterPage = () => {
           </p>
         </div>
 
-        <form onSubmit={(event) => {}}>
+        <form
+          onSubmit={(event) => {
+            handleSubmit(event);
+          }}
+        >
           <div className="mb-4">
             <label
               htmlFor="username"
@@ -32,6 +87,7 @@ export const RegisterPage = () => {
               id="username"
               name="username"
               placeholder="Elige un nombre de usuario"
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
@@ -49,6 +105,7 @@ export const RegisterPage = () => {
               id="email"
               name="email"
               placeholder="tu@email.com"
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
@@ -66,6 +123,7 @@ export const RegisterPage = () => {
               id="password"
               name="password"
               placeholder="Crea una contraseña segura"
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
@@ -83,6 +141,7 @@ export const RegisterPage = () => {
               id="name"
               name="name"
               placeholder="Tu nombre"
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
@@ -100,6 +159,7 @@ export const RegisterPage = () => {
               id="lastname"
               name="lastname"
               placeholder="Tu apellido"
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
