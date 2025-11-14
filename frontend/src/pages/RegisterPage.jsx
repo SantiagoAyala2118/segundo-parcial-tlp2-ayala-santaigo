@@ -9,6 +9,7 @@ export const RegisterPage = () => {
   // TODO: Implementar useForm para el manejo del formulario
   // TODO: Implementar función handleSubmit
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   const { formState, handleChange, handleReset } = useForm({
     name: "",
@@ -22,10 +23,8 @@ export const RegisterPage = () => {
 
   //* FUNCIÓN HANDLESUBMIR
   const handleSubmit = async (event) => {
-    setIsLoading(true);
-
-    handleReset();
     event.preventDefault();
+    setIsLoading(true);
 
     try {
       const res = await fetch("http://localhost:3000/api/register", {
@@ -39,16 +38,20 @@ export const RegisterPage = () => {
 
       if (!res.ok) {
         console.log("Error durante el regsitro", res.status, res.statusText);
+        setErrors(true);
         return;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 800));
+
+      handleReset();
 
       setIsLoading(false);
 
       navigate("/login");
     } catch (error) {
       console.log("Error registrandose", err);
+      setErrors(true);
     } finally {
       setIsLoading(false);
     }
